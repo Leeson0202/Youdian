@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.as.youdian.dao.word.WordClearDao">
+
+    <resultMap id="BaseResultMap" type="top.as.youdian.entity.word.WordClear">
+        <!--@Table word_clear-->
+        <result property="clearfix" column="clearfix" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select *
+        from vocabulary.word_clear
+        where w_id = #{wId}
+    </select>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultType="top.as.youdian.entity.word.WordWIdClear">
+        select w_id as wId,clearfix
+        from vocabulary.word_clear
+        <where>
+            <if test="wId != null and wId != ''">
+                and w_id = #{wId}
+            </if>
+            <if test="clearfix != null and clearfix != ''">
+                and clearfix like concat('%',#{clearfix},'%')
+            </if>
+        </where>
+        group by w_id
+    </select>
+
+</mapper>

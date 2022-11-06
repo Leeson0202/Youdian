@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.as.youdian.dao.word.WordDao">
+
+    <resultMap id="BaseResultMap" type="top.as.youdian.entity.word.Word">
+        <!--@Table word-->
+        <result property="wId" column="w_id" jdbcType="VARCHAR"/>
+        <result property="spell" column="spell" jdbcType="VARCHAR"/>
+        <result property="tag" column="tag" jdbcType="VARCHAR"/>
+        <result property="href" column="href" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select w_id,
+               spell,
+               tag,
+               href
+        from vocabulary.word
+        where binary w_id = #{wId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select w_id,
+               spell,
+               tag,
+               href
+        from vocabulary.word
+        limit #{offset}, #{limit}
+    </select>
+        <!--查询单词本中单词数量-->
+    <select id="queryNumByTag" resultType="Integer">
+        select count(*)
+        from vocabulary.word
+        where binary tag like concat('%', #{word.tag}, '%')
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+        w_id, spell, tag, href
+        from vocabulary.word
+        <where>
+            <if test="word.wId != null and word.wId != ''">
+                and binary w_id = #{word.wId}
+            </if>
+            <if test="word.tag != null and word.tag != ''">
+                and tag like concat('%', #{word.tag},'%')
+            </if>
+            <if test="word.href != null and word.href != ''">
+                and binary href = #{word.href}
+            </if>
+            <choose>
+                <when test="num>-1">
+                    <if test="word.spell != null and word.spell != ''">
+                        and spell like concat( #{word.spell},'%')
+                    </if>
+                    ORDER BY RAND() LIMIT #{num},50
+                </when>
+                <otherwise>
+                    <if test="word.spell != null and word.spell != ''">
+                        and spell = #{word.spell}
+                    </if>
+                </otherwise>
+            </choose>
+
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="wId" useGeneratedKeys="true">
+        insert into vocabulary.word(w_id, spell, tag, href)
+        values (#{wId}, #{spell}, #{tag}, #{href})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update vocabulary.word
+        <set>
+            <if test="spell != null and spell != ''">
+                spell = #{spell},
+            </if>
+            <if test="tag != null and tag != ''">
+                tag = #{tag},
+            </if>
+            <if test="href != null and href != ''">
+                href = #{href},
+            </if>
+        </set>
+        where w_id = #{wId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from vocabulary.word
+        where binary w_id = #{wId}
+    </delete>
+
+</mapper>

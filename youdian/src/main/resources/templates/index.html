@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="text/javascript" src="js/jquery-3.6.0.js"></script>
+    <title>悠点单词</title>
+    <style>
+        html {
+            height: 100%;
+        }
+        
+        body {
+            background-size: cover;
+            padding: 0px;
+            margin: 0px;
+        }
+        
+        .win {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .framediv {
+            /*border: 1px solid red;*/
+            width: 100%;
+            height: 100%;
+        }
+        
+        a {
+            color: blue;
+            background-color: #ddd;
+            padding: 5px;
+            margin: 5px;
+            border: 1px solid black;
+            border-radius: 2px;
+            width: 50%;
+            height: 2em;
+        }
+        
+        .myframe {
+            position: relative;
+            width: 33.3%;
+            height: 100%;
+            float: left;
+            text-align: center;
+        }
+        
+        .frame {
+            position: relative;
+            width: 98%;
+            height: 100%;
+            border: 0px;
+        }
+        
+        #f2 {
+            background-color: #999;
+            justify-content: center;
+            /* align-items: center; */
+            display: flex;
+            text-align: center;
+        }
+        
+        #button1 {
+            position: fixed;
+            bottom: 10px;
+            width: auto;
+            height: 2em;
+        }
+    </style>
+
+
+    <style>
+        #index-div {
+            position: absolute;
+            left: 20%;
+            top: 18%;
+            /*border: 1px solid blue;*/
+            width: 340px;
+            height: auto;
+            text-align: center;
+        }
+        
+        #login-title {
+            font: 2em sans-serif;
+            font-weight: 700;
+            color: rgb(120, 120, 120);
+        }
+        
+        #index-form {
+            margin-top: 25px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            padding-top: 15px;
+            background-color: white;
+            /* border: 1px solid red; */
+            border-radius: 8px;
+            width: 100%;
+            text-align: center;
+            opacity: 0.85;
+        }
+        
+        input {
+            border-top: white;
+            border-left: white;
+            border-right: white;
+            border-color: rgb(214, 216, 218);
+            /* border: 1px solid red; */
+            margin-top: 16px;
+            padding-left: 5px;
+            width: 85%;
+            height: 3em;
+            font-size: 1em;
+        }
+        
+        button {
+            background-color: rgb(65, 65, 65);
+            border: 1px solid rgb(49, 50, 51);
+            border-radius: 3px;
+            margin-top: 30px;
+            color: white;
+            width: 90%;
+            height: 3em;
+        }
+        
+        a {
+            color: blue;
+            font-size: 0.8em;
+            text-decoration: none;
+        }
+        
+        .token {
+            border: 1px solid red;
+            border-radius: 2px;
+            margin: 0px 10px 0px;
+            padding: 3px;
+            width: auto;
+            height: 20px;
+            word-break: break-all;
+            text-align: left;
+        }
+    </style>
+
+
+    <script type="text/javascript">
+        console.log(111)
+        $(window).ready(function() {
+            let framediv = $(window).height();
+            let framewidth = $(window).width();
+            $(".framediv").css("height", framediv + "px");
+            $("#button1").css("left", (framewidth / 2) - 20 + "px");
+
+
+            // $("#f2").css("left", frameleft + "px");
+            //点击buttom
+            let open = 1;
+            $("#button1").click(function() {
+                if (open == 1) {
+                    $("#frame2").fadeOut();
+                    $(".myframe").css("width", "50%");
+                    $(this).text("打开");
+                    open = 0;
+                } else {
+
+                    $("#frame2").fadeIn();
+                    $(".myframe").css("width", "33.3%");
+                    $(this).text("关闭");
+                    open = 1;
+                }
+            });
+
+            // 点击token div
+            $("#token").click(function() {
+                // $("#token").select();
+                // document.execCommand("Copy");
+                let str = $(this).text();
+                myCopy(str)
+            });
+
+            $("input").blur(function() {
+                if ($(this).val().length == 0) {
+                    if ($(this).is("#user"))
+                        $(this).attr("placeholder", "手机号或账户不能为空")
+                    else
+                        $(this).attr("placeholder", "密码不能为空")
+
+                }
+            });
+
+
+            function myCopy(str) {
+                let input = `<input type="text" id="temp" value="${str}">`;
+                $("body").append(input); //放入document
+                $("#temp").select(); //选中输入框的文本，目前只有input和textarea支持,注意要复制的标签不能隐藏(display: none;)
+                document.execCommand("Copy"); //执行document的复制
+                $("#temp").remove(); //用完就扔
+            }
+
+
+            $("#form-submit").click(function() { // 获取表格数据 判断是否是空
+                console.log("kdajbfq")
+                var t = $("form").serializeArray();
+                $.each(t, function(i, item) {
+                    if (item['value'] == '') {
+                        flag = 1;
+                        return false
+                    } else {
+                        flag = 0;
+                    }
+                });
+                console.log(flag)
+
+                if (flag != 1) {
+                    $.ajax({
+                        type: "post",
+                        url: "user/load",
+                        dataType: "json",
+                        data: {
+                            tel: $("#user").val(),
+                            pwd: $("#pwd").val(),
+                            devId: "12345leeson"
+                        },
+                        success: function(data) {
+                            if (data.state == 200) {
+                                // 设置cookie到期时间
+                                console.log(data.data.token)
+                                $("#token").css("height", "auto")
+                                $("#token").html(data.data.token);
+                                myCopy(data.data.token);
+                            } else {
+                                console.log(data)
+                                alert("state: " + data.state + "\nmessage: " + data.message);
+                            }
+                        }
+                    })
+                }
+            })
+
+        })
+    </script>
+
+</head>
+
+<body>
+    <div class="win">
+
+        <div class="framediv">
+            <div id="f2" class="myframe">
+                <a href="/swagger-ui.html">swagger
+                在线测试</a>
+                <a href="https://gitee.com/leeson0202/youdian">gitee 接口文档</a><br/>
+
+                <div id="index-div">
+                    <span id="login-title">登录</span>
+                    <div id="index-form">
+                        <form id="index-form-data">
+                            <input id="user" style="margin-bottom: 5px;" type="text" name="user" value="leeson" placeholder="手机号">
+                            <br>
+                            <input id="pwd" style="margin-bottom: 5px;" type="password" name="pwd" value="leeson" placeholder="密码">
+                            <br>
+
+                        </form>
+                        <div style="margin-top: 10px;">
+                            <button id="form-submit">登录</button>
+                            <br>
+
+                            <div id="msg" style="text-align: left;margin-top: 20px; ">
+
+                            </div>
+                        </div>
+                        <div type="text" id="token" class="token"></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="myframe">
+                <iframe src="swagger-ui.html" class="frame" name="f1"></iframe>
+
+            </div>
+            <div id="frame2" class="myframe">
+                <iframe src="swagger-ui.html" class="frame" name="f2"></iframe>
+
+            </div>
+        </div>
+        <button id="button1">关闭</button>
+
+
+    </div>
+
+</body>
+
+
+</html>

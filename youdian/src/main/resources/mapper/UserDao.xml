@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.as.youdian.dao.UserDao">
+
+    <resultMap id="BaseResultMap" type="top.as.youdian.entity.user.User">
+        <!--@Table user-->
+        <result property="uId" column="u_id" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="tel" column="tel" jdbcType="VARCHAR"/>
+        <result property="pwd" column="pwd" jdbcType="VARCHAR"/>
+        <result property="desc" column="desc" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="wx" column="wx" jdbcType="VARCHAR"/>
+        <result property="grade" column="grade" jdbcType="VARCHAR"/>
+        <result property="birth" column="birth" jdbcType="TIMESTAMP"/>
+        <result property="cDate" column="c_date" jdbcType="TIMESTAMP"/>
+        <result property="hUrl" column="h_url" jdbcType="VARCHAR"/>
+        <result property="bUrl" column="b_url" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--更新用户单词表 tag uId  储存过程-->
+    <select id="callUserWord"  statementType="CALLABLE">
+        {call youdian.update_user_word(
+                #{tag,mode=IN},
+                #{uId,mode=IN}
+            )}
+    </select>
+
+    <!--查询单个 id-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select u_id,
+               `name`,
+               tel,
+               pwd,
+               `desc`,
+               email,
+               wx,
+               grade,
+               birth,
+               c_date,
+               h_url,
+               b_url
+        from youdian.user
+        where binary u_id = #{uId}
+    </select>
+    <!--查询单个 tel-->
+    <select id="queryByTel" resultMap="BaseResultMap">
+        select u_id,
+               `name`,
+               tel,
+               pwd,
+               `desc`,
+               email,
+               wx,
+               grade,
+               birth,
+               c_date,
+               h_url,
+               b_url
+        from youdian.user
+        where binary  tel = #{tel}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select u_id,
+               `name`,
+               tel,
+               pwd,
+               `desc`,
+               email,
+               wx,
+               grade,
+               birth,
+               c_date,
+               h_url,
+               b_url
+        from youdian.user
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+        u_id, `name`, tel, pwd, `desc`, email, wx, grade, birth, c_date, h_url, b_url
+        from youdian.user
+        <where>
+            <if test="uId != null and uId != ''">
+                and binary u_id = #{uId}
+            </if>
+            <if test="name != null and name != ''">
+                and binary name = #{name}
+            </if>
+            <if test="tel != null and tel != ''">
+                and binary tel = #{tel}
+            </if>
+            <if test="pwd != null and pwd != ''">
+                and binary pwd = #{pwd}
+            </if>
+            <if test="desc != null and desc != ''">
+                and binary `desc` = #{desc}
+            </if>
+            <if test="email != null and email != ''">
+                and binary email = #{email}
+            </if>
+            <if test="wx != null and wx != ''">
+                and binary wx = #{wx}
+            </if>
+            <if test="grade != null and grade != ''">
+                and binary grade = #{grade}
+            </if>
+            <if test="birth != null">
+                and binary birth = #{birth}
+            </if>
+            <if test="cDate != null">
+                and binary c_date = #{cDate}
+            </if>
+            <if test="hUrl != null and hUrl != ''">
+                and binary h_url = #{hUrl}
+            </if>
+            <if test="bUrl != null and bUrl != ''">
+                and binary b_url = #{bUrl}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="uId" useGeneratedKeys="true">
+        insert into youdian.user(u_id, name, tel, pwd)
+        values (#{uId}, #{tel}, #{tel}, #{pwd});
+
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update youdian.user
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="tel != null and tel != ''">
+                tel = #{tel},
+            </if>
+            <if test="pwd != null and pwd != ''">
+                pwd = #{pwd},
+            </if>
+            <if test="desc != null and desc != ''">
+                `desc` = #{desc},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="wx != null and wx != ''">
+                wx = #{wx},
+            </if>
+            <if test="grade != null and grade != ''">
+                grade = #{grade},
+            </if>
+            <if test="birth != null">
+                birth = #{birth},
+            </if>
+            <if test="cDate != null">
+                c_date = #{cDate},
+            </if>
+            <if test="hUrl != null and hUrl != ''">
+                h_url = #{hUrl},
+            </if>
+            <if test="bUrl != null and bUrl != ''">
+                b_url = #{bUrl},
+            </if>
+        </set>
+        where u_id = #{uId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from youdian.user
+        where binary u_id = #{uId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.as.youdian.dao.UserWordDao">
+
+    <resultMap id="BaseResultMap" type="top.as.youdian.entity.userWord.UserWord">
+        <!--@Table user_word-->
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="uId" column="u_id" jdbcType="VARCHAR"/>
+        <result property="wId" column="w_id" jdbcType="VARCHAR"/>
+        <result property="tag" column="tag" jdbcType="INTEGER"/>
+        <result property="timesReview" column="times_review" jdbcType="INTEGER"/>
+        <result property="difficult" column="difficult" jdbcType="INTEGER"/>
+        <result property="cDate" column="c_date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select id,
+               u_id,
+               w_id,
+               tag,
+               times_review,
+               difficult,
+               c_date
+        from youdian.user_word
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select id,
+               u_id,
+               w_id,
+               tag,
+               times_review,
+               difficult,
+               c_date
+        from youdian.user_word
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+        id, u_id, w_id, tag, times_review, difficult, c_date
+        from youdian.user_word
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="uId != null and uId != ''">
+                and u_id = #{uId}
+            </if>
+            <if test="wId != null and wId != ''">
+                and w_id = #{wId}
+            </if>
+            <if test="tag != null">
+                and tag = #{tag}
+            </if>
+            <if test="timesReview != null">
+                and times_review = #{timesReview}
+            </if>
+            <if test="difficult != null">
+                and difficult = #{difficult}
+            </if>
+            <if test="cDate != null">
+                and c_date = #{cDate}
+            </if>
+        </where>
+        order by c_date
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into youdian.user_word(id, u_id, w_id, tag, times_review, difficult, c_date)
+        values (#{id}, #{uId}, #{wId}, #{tag}, #{timesReview}, #{difficult}, #{cDate})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update youdian.user_word
+        <set>
+            <if test="uId != null and uId != ''">
+                u_id = #{uId},
+            </if>
+            <if test="wId != null and wId != ''">
+                w_id = #{wId},
+            </if>
+            <if test="tag != null">
+                tag = #{tag},
+            </if>
+            <if test="timesReview != null">
+                times_review = #{timesReview},
+            </if>
+            <if test="difficult != null">
+                difficult = #{difficult},
+            </if>
+            <if test="cDate != null">
+                c_date = #{cDate},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from youdian.user_word
+        where id = #{id}
+    </delete>
+
+</mapper>

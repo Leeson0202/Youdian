@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.as.youdian.dao.UserRemindDao">
+
+    <resultMap id="BaseResultMap" type="top.as.youdian.entity.UserRemind">
+        <!--@Table user_remind-->
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="uId" column="u_id" jdbcType="VARCHAR"/>
+        <result property="tag" column="tag" jdbcType="VARCHAR"/>
+        <result property="phoRem" column="pho_rem" jdbcType="INTEGER"/>
+        <result property="watRem" column="wat_rem" jdbcType="INTEGER"/>
+        <result property="dayTime" column="day_time" jdbcType="INTEGER"/>
+        <result property="list" column="list" jdbcType="INTEGER"/>
+        <result property="numOfList" column="num_of_list" jdbcType="INTEGER"/>
+        <result property="circWay" column="circ_way" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+          id, u_id, tag, pho_rem, wat_rem, day_time, list, num_of_list, circ_way
+        from youdian.user_remind
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select
+          id, u_id, tag, pho_rem, wat_rem, day_time, list, num_of_list, circ_way
+        from youdian.user_remind
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+          id, u_id, tag, pho_rem, wat_rem, day_time, list, num_of_list, circ_way
+        from youdian.user_remind
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="uId != null and uId != ''">
+                and u_id = #{uId}
+            </if>
+            <if test="tag != null and tag != ''">
+                and tag = #{tag}
+            </if>
+            <if test="phoRem != null">
+                and pho_rem = #{phoRem}
+            </if>
+            <if test="watRem != null">
+                and wat_rem = #{watRem}
+            </if>
+            <if test="dayTime != null">
+                and day_time = #{dayTime}
+            </if>
+            <if test="list != null">
+                and list = #{list}
+            </if>
+            <if test="numOfList != null">
+                and num_of_list = #{numOfList}
+            </if>
+            <if test="circWay != null">
+                and circ_way = #{circWay}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into youdian.user_remind(id,u_id, tag, pho_rem, wat_rem, day_time, list, num_of_list, circ_way)
+        values (replace(uuid(),'-',''),#{uId}, #{tag}, #{phoRem}, #{watRem}, #{dayTime}, #{list}, #{numOfList}, #{circWay})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update youdian.user_remind
+        <set>
+            <if test="uId != null and uId != ''">
+                u_id = #{uId},
+            </if>
+            <if test="tag != null and tag != ''">
+                tag = #{tag},
+            </if>
+            <if test="phoRem != null">
+                pho_rem = #{phoRem},
+            </if>
+            <if test="watRem != null">
+                wat_rem = #{watRem},
+            </if>
+            <if test="dayTime != null">
+                day_time = #{dayTime},
+            </if>
+            <if test="list != null">
+                list = #{list},
+            </if>
+            <if test="numOfList != null">
+                num_of_list = #{numOfList},
+            </if>
+            <if test="circWay != null">
+                circ_way = #{circWay},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from youdian.user_remind where id = #{id}
+    </delete>
+
+</mapper>

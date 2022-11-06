@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.as.youdian.dao.UserTimeRecordDao">
+
+    <resultMap id="BaseResultMap" type="top.as.youdian.entity.UserTimeRecord">
+        <!--@Table user_time_record-->
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="uId" column="u_id" jdbcType="VARCHAR"/>
+        <result property="day" column="day" jdbcType="TIMESTAMP"/>
+        <result property="a" column="A" jdbcType="INTEGER"/>
+        <result property="b" column="B" jdbcType="INTEGER"/>
+        <result property="c" column="C" jdbcType="INTEGER"/>
+        <result property="d" column="D" jdbcType="INTEGER"/>
+        <result property="e" column="E" jdbcType="INTEGER"/>
+        <result property="f" column="F" jdbcType="INTEGER"/>
+        <result property="g" column="G" jdbcType="INTEGER"/>
+        <result property="h" column="H" jdbcType="INTEGER"/>
+        <result property="i" column="I" jdbcType="INTEGER"/>
+        <result property="j" column="J" jdbcType="INTEGER"/>
+        <result property="k" column="K" jdbcType="INTEGER"/>
+        <result property="l" column="L" jdbcType="INTEGER"/>
+        <result property="sumTime" column="sum_time" jdbcType="INTEGER"/>
+        <result property="sum" column="sum" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BaseResultMap">
+        select id,
+               u_id,
+               day,
+               A,
+               B,
+               C,
+               D,
+               E,
+               F,
+               G,
+               H,
+               I,
+               J,
+               K,
+               L,
+               sum_time,
+               sum
+        from youdian.user_time_record
+        where id = #{id}
+    </select>
+    <!--查询14条  uId-->
+    <select id="queryByUIdAfterDay" resultMap="BaseResultMap">
+        select id,
+               u_id,
+               day,
+               A,
+               B,
+               C,
+               D,
+               E,
+               F,
+               G,
+               H,
+               I,
+               J,
+               K,
+               L,
+               sum_time,
+               sum
+        from youdian.user_time_record
+        where u_id = #{uId}
+          and day > #{day}
+        order by day
+
+    </select>
+    <!--查询单个  day-->
+    <select id="queryByDay" resultMap="BaseResultMap">
+        select id,
+               u_id,
+               day,
+               A,
+               B,
+               C,
+               D,
+               E,
+               F,
+               G,
+               H,
+               I,
+               J,
+               K,
+               L,
+               sum_time,
+               sum
+        from youdian.user_time_record
+        where day = #{day}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BaseResultMap">
+        select id,
+               u_id,
+               day,
+               A,
+               B,
+               C,
+               D,
+               E,
+               F,
+               G,
+               H,
+               I,
+               J,
+               K,
+               L,
+               sum_time,
+               sum
+        from youdian.user_time_record
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BaseResultMap">
+        select
+        id, u_id, day, A, B, C, D, E, F, G, H, I, J, K, L, sum_time, sum
+        from youdian.user_time_record
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="uId != null and uId != ''">
+                and u_id = #{uId}
+            </if>
+            <if test="day != null">
+                and day = #{day}
+            </if>
+            <if test="a != null">
+                and A = #{a}
+            </if>
+            <if test="b != null">
+                and B = #{b}
+            </if>
+            <if test="c != null">
+                and C = #{c}
+            </if>
+            <if test="d != null">
+                and D = #{d}
+            </if>
+            <if test="e != null">
+                and E = #{e}
+            </if>
+            <if test="f != null">
+                and F = #{f}
+            </if>
+            <if test="g != null">
+                and G = #{g}
+            </if>
+            <if test="h != null">
+                and H = #{h}
+            </if>
+            <if test="i != null">
+                and I = #{i}
+            </if>
+            <if test="j != null">
+                and J = #{j}
+            </if>
+            <if test="k != null">
+                and K = #{k}
+            </if>
+            <if test="l != null">
+                and L = #{l}
+            </if>
+            <if test="sumTime != null">
+                and sum_time = #{sumTime}
+            </if>
+            <if test="sum != null">
+                and sum = #{sum}
+            </if>
+        </where>
+        order by day;
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into youdian.user_time_record(id, u_id, day, A, B, C, D, E, F, G, H, I, J, K, L, sum_time, sum)
+        values (#{id}, #{uId}, #{day}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, #{sumTime}, 0)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update youdian.user_time_record
+        <set>
+            <if test="uId != null and uId != ''">
+                u_id = #{uId},
+            </if>
+            <if test="day != null">
+                day = #{day},
+            </if>
+            <if test="a != null">
+                A = #{a},
+            </if>
+            <if test="b != null">
+                B = #{b},
+            </if>
+            <if test="c != null">
+                C = #{c},
+            </if>
+            <if test="d != null">
+                D = #{d},
+            </if>
+            <if test="e != null">
+                E = #{e},
+            </if>
+            <if test="f != null">
+                F = #{f},
+            </if>
+            <if test="g != null">
+                G = #{g},
+            </if>
+            <if test="h != null">
+                H = #{h},
+            </if>
+            <if test="i != null">
+                I = #{i},
+            </if>
+            <if test="j != null">
+                J = #{j},
+            </if>
+            <if test="k != null">
+                K = #{k},
+            </if>
+            <if test="l != null">
+                L = #{l},
+            </if>
+            <if test="sumTime != null">
+                sum_time = #{sumTime},
+            </if>
+            <if test="sum != null">
+                sum = #{sum},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from youdian.user_time_record
+        where id = #{id}
+    </delete>
+
+</mapper>
